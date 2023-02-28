@@ -14,6 +14,7 @@ rows: [
 {title: "👾 | 𝙰𝚄𝚃𝙾𝚂𝚃𝙸𝙲𝙺𝙴𝚁", description: "𝚃𝙾𝙳𝙰𝚂 𝙻𝙰𝚂 𝙸𝙼𝙰𝙶𝙴𝙽𝙴𝚂, 𝚅𝙸𝙳𝙴𝙾𝚂 𝙾 𝙴𝙽𝙻𝙰𝙲𝙴𝚂 𝙴𝙽𝚅𝙸𝙰𝙳𝙾𝚂 𝚂𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙴𝙽 𝙴𝙽 𝚂𝚃𝙸𝙲𝙺𝙴𝚁", rowId: `${usedPrefix + command} autosticker`},
 {title: "💬 | 𝙿𝙲𝙾𝙽𝙻𝚈", description: "𝙴𝙻 𝙱𝙾𝚃 𝚂𝙾𝙻𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴𝚁𝙰 𝙰 𝙻𝙾𝚂 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝚂𝙸 𝙴𝚂 𝚄𝙽 𝙲𝙷𝙰𝚃 𝙿𝚁𝙸𝚅𝙰𝙳𝙾", rowId: `${usedPrefix + command} pconly`},
 {title: "🏢 | 𝙶𝙲𝙾𝙽𝙻𝚈", description: "𝙴𝙻 𝙱𝙾𝚃 𝚂𝙾𝙻𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴𝚁𝙰 𝙰 𝙻𝙾𝚂 𝙲𝙾𝙼𝙰𝙽𝙳𝙾𝚂 𝚂𝙸 𝙴𝚂 𝚄𝙽 𝙶𝚁𝚄𝙿𝙾", rowId: `${usedPrefix + command} gconly`},
+{title: "👑 | 𝙼𝙾𝙳𝙾𝙰𝙳𝙼𝙸𝙽", description: "𝙴𝙻 𝙱𝙾𝚃 𝚂𝙾𝙻𝙾 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙴𝚁𝙰 𝙰 𝙻𝙾𝚂 𝙰𝙳𝙼𝙸𝙽𝚂 𝙳𝙴𝙻 𝙶𝚁𝚄𝙿𝙾", rowId: `${usedPrefix + command} modoadmin`},
 ]}, ]
 let name = await conn.getName(m.sender)
 const listMessage = {
@@ -47,6 +48,8 @@ footer: `
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *audios*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}enable *autosticker*_
 ┣ ඬ⃟ℹ️ _${usedPrefix}disable *autosticker*_
+┣ ඬ⃟ℹ️ _${usedPrefix}enable *modoadmin*_
+┣ ඬ⃟ℹ️ _${usedPrefix}disable *modoadmin*_
 ┗━━━━━━━━━━━━━┛
 ${author}`,
 title: null,
@@ -124,6 +127,14 @@ throw false
 }}
 chat.antiLink2 = isEnable          
 break
+case 'modoadmin':
+if (m.isGroup) {
+if (!(isAdmin || isOwner)) {
+global.dfail('admin', m, conn)
+throw false
+}}
+chat.modoadmin = isEnable          
+break
 case 'autosticker':
 if (m.isGroup) {
 if (!(isAdmin || isOwner)) {
@@ -190,7 +201,7 @@ global.dfail('rowner', m, conn)
 throw false
 }
 global.opts['swonly'] = isEnable
-break
+break   
 default:
 if (!/[01]/.test(command)) return await conn.sendMessage(m.chat, listMessage)
 throw false
