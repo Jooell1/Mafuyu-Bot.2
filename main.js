@@ -170,32 +170,31 @@ isInit = false
 return true
 }
 
-const comandosFolder = global.__dirname(join(__dirname, './comandos/index'))
-const comandosFilter = filename => /\.js$/.test(filename)
-global.comandos = {}
+const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
+const pluginFilter = filename => /\.js$/.test(filename)
+global.plugins = {}
 async function filesInit() {
-for (let filename of readdirSync(comandosFolder).filter(comandosFilter)) {
+for (let filename of readdirSync(pluginFolder).filter(pluginFilter)) {
 try {
-let file = global.__filename(join(comandosFolder, filename))
+let file = global.__filename(join(pluginFolder, filename))
 const module = await import(file)
-global.comandos[filename] = module.default || module
+global.plugins[filename] = module.default || module
 } catch (e) {
 conn.logger.error(e)
-delete global.comandos[filename]
+delete global.plugins[filename]
 }}}
-filesInit().then(_ => Object.keys(global.comandos)).catch(console.error)
-
+filesInit().then(_ => Object.keys(global.plugins)).catch(console.error)
 
 global.reload = async (_ev, filename) => {
-if (comandosFilter(filename)) {
-let dir = global.__filename(join(comandosFolder, filename), true)
-if (filename in global.comandos) {
-if (existsSync(dir)) conn.logger.info(` updated plugin - '${filename}'`)
+if (pluginFilter(filename)) {
+let dir = global.__filename(join(pluginFolder, filename), true)
+if (filename in global.plugins) {
+if (existsSync(dir)) conn.logger.info(` updated Miku- '${filename}'`)
 else {
-conn.logger.warn(`deleted plugin - '${filename}'`)
-return delete global.comandos[filename]
+conn.logger.warn(`deleted  plugins- '${filename}'`)
+return delete global.plugins[filename]
 }
-} else conn.logger.info(`new plugin - '${filename}'`)
+} else conn.logger.info(`new plugins - '${filename}'`)
 let err = syntaxerror(readFileSync(dir), filename, {
 sourceType: 'module',
 allowAwaitOutsideFunction: true
@@ -203,14 +202,14 @@ allowAwaitOutsideFunction: true
 if (err) conn.logger.error(`syntax error while loading '${filename}'\n${format(err)}`)
 else try {
 const module = (await import(`${global.__filename(dir)}?update=${Date.now()}`))
-global.comandos[filename] = module.default || module
+global.plugins[filename] = module.default || module
 } catch (e) {
-conn.logger.error(`error require plugin '${filename}\n${format(e)}'`)
+conn.logger.error(`error require Miku '${filename}\n${format(e)}'`)
 } finally {
-global.comandos = Object.fromEntries(Object.entries(global.comandos).sort(([a], [b]) => a.localeCompare(b)))
+global.plugins = Object.fromEntries(Object.entries(global.plugins).sort(([a], [b]) => a.localeCompare(b)))
 }}}
 Object.freeze(global.reload)
-watch(comandosFolder, global.reload)
+watch(pluginFolder, global.reload)
 await global.reloadHandler()
 async function _quickTest() {
 let test = await Promise.all([
@@ -234,11 +233,6 @@ let [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test
 let s = global.support = { ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find }
 Object.freeze(global.support)
 }
-setInterval(async () => {
-var a = await clearTmp()
-console.log(chalk.cyanBright(lenguajeGB['smsClearTmp']()))
-}, 180000)
 _quickTest()
-.then(() => conn.logger.info(lenguajeGB['smsCargando']()))
+.then(() => conn.logger.info(`Ƈᴀʀɢᴀɴᴅᴏ..\n`))
 .catch(console.error)
-
